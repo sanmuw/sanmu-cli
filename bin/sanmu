@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+
+const { program } = require('commander')
+const chalk = require('chalk')
+
+program
+  .version(`sanmu cli ${require('../package.json').version}`)
+  .usage('<command> [options]')
+
+// create app name
+program
+  .command('create <app-name>')
+  .description('create a project')
+  .option('--merge', '如果项目路径已存在则自动进行合并')
+  .option('--force', '如果项目路径已存在则自动覆盖')
+  .action((name, options) => {
+    require('../lib/create')(name, options)
+  })
+
+program.on('--help', () => {
+  console.log()
+  console.log(` 运行 ${chalk.cyan('sanmu-cli <command> --help')} 获取命令使用详情`)
+  console.log()
+})
+
+program.commands.forEach((c) => c.on('--help', () => console.log()))
+
+program.parse(process.argv)
